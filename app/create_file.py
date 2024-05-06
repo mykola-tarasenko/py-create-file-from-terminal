@@ -30,7 +30,6 @@ def process_file(directory: list[str], filename: str) -> None:
 
 if __name__ == "__main__":
     args = parse_args()
-    print(args.directory)
     if args.directory:
         process_directory(args.directory)
     if args.file:
