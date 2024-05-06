@@ -2,18 +2,21 @@ import argparse
 import os
 from datetime import datetime
 
-parser = argparse.ArgumentParser()
 
-parser.add_argument("-d", "--directory",
-                    type=str, nargs="*", help="creates directory")
-parser.add_argument("-f", "--file", type=str, help="creates a file")
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-d", "--directory",
+                        type=str, nargs="*", help="creates directory")
+    parser.add_argument("-f", "--file", type=str, help="creates a file")
+    return parser.parse_args()
 
-args = parser.parse_args()
 
-if args.directory:
-    os.makedirs(os.path.join(*args.directory), exist_ok=True)
-if args.file:
-    with open(os.path.join(*args.directory or "", args.file), "a") as file:
+def process_directory(directory: list[str]) -> None:
+    os.makedirs(os.path.join(*directory), exist_ok=True)
+
+
+def process_file(directory: list[str], filename: str) -> None:
+    with open(os.path.join(*directory or "", filename), "a") as file:
         file.write(datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
         line_number = 1
         while True:
@@ -23,3 +26,12 @@ if args.file:
                 break
             file.write(f"\n{line_number} {data}")
             line_number += 1
+
+
+if __name__ == "__main__":
+    args = parse_args()
+    print(args.directory)
+    if args.directory:
+        process_directory(args.directory)
+    if args.file:
+        process_file(args.directory, args.file)
